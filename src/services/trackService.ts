@@ -10,7 +10,7 @@ export const trackService = {
     newTrack,
   }: {
     userId: string;
-    newTrack: Playlist_track;
+    newTrack: any;
   }): Promise<Playlist_tracks> {
     const { data: playlist, error: pError } = await supabase
       .from('playlists')

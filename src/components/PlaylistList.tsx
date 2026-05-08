@@ -13,10 +13,12 @@ export default function PlaylistList() {
 
   if (!playlists || playlists.length === 0) return <>0</>;
 
+  console.log(playlists);
+
   return (
     <ul>
-      {playlists.map(playlist => (
-        <li>{1}</li>
+      {playlists.map((playlist, idx) => (
+        <li key={idx}>{playlist.title}</li>
       ))}
     </ul>
   );

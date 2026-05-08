@@ -7,9 +7,11 @@ import { Album, Track } from '@/types/lastfm';
 import { Playlists } from '@/types/playlist';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
+import { useAddTrack } from '@/hooks/useTrack';
 
 export default function Search() {
   const { userId } = useAuthStore();
+  const { mutate: addTrack, isPending } = useAddTrack();
   const router = useRouter();
   const [query, setQuery] = useState<string>('');
   const [albums, setAlbums] = useState<Track[]>([]);
@@ -56,7 +58,16 @@ export default function Search() {
     }
 
     setVideoId('test');
-    console.log(videoId);
+
+    addTrack({
+      userId: userId,
+      newTrack: {
+        album_name,
+        artist_name,
+        youtube_video_id: 'test',
+      },
+    });
+
     // const loadVideo = async () => {
     //   try {
     //     const data = await getVideo(`${artist} ${name}`);
