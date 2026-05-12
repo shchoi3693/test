@@ -1,10 +1,10 @@
 import { createClient } from '@/lib/supabase/client';
-import { Playlists } from '@/types/playlist';
+import { Playlist } from '@/types/playlist';
 
 const supabase = createClient();
 
 export const playlistService = {
-  async getPlaylist(userId: string): Promise<Playlists[]> {
+  async getPlaylist(userId: string): Promise<Playlist[]> {
     const { data, error } = await supabase
       .from('playlists')
       .select('*')
@@ -12,10 +12,10 @@ export const playlistService = {
       .order('created_at', { ascending: false });
 
     if (error) throw new Error(error.message);
-    return data as Playlists[];
+    return data as Playlist[];
   },
 
-  async createPlaylist({ userId, title }: { userId: string; title: string }): Promise<Playlists> {
+  async createPlaylist({ userId, title }: { userId: string; title: string }): Promise<Playlist> {
     const { data, error } = await supabase
       .from('playlists')
       .insert([{ user_id: userId, title: title }])
@@ -23,6 +23,6 @@ export const playlistService = {
       .single();
 
     if (error) throw new Error(error.message);
-    return data as Playlists;
+    return data as Playlist;
   },
 };

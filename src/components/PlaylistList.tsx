@@ -1,24 +1,35 @@
 'use client';
 
-import { usePlaylists } from '@/hooks/usePlaylist';
+import { usePlaylist } from '@/hooks/usePlaylist';
+import { usePlaylistTrack } from '@/hooks/useTrack';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function PlaylistList() {
   const { userId } = useAuthStore();
-  const { data: playlists, isLoading, isError } = usePlaylists(userId);
+  const {
+    data: playlists,
+    isLoading: isPlaylistLoading,
+    isError: isPlaylistError,
+  } = usePlaylist(userId);
+  const playlistId = playlists && playlists.length > 0 ? playlists[0].id : null;
+  console.log(userId, playlistId);
+  const {
+    data: tracks,
+    isLoading: isTracksLoading,
+    isError: isTracksError,
+    isStale,
+  } = usePlaylistTrack({ user_id: userId, playlist_id: playlistId });
 
-  if (isLoading) return <>Loading</>;
+  if (isPlaylistLoading || isTracksLoading) return <>Loading</>;
+  if (isPlaylistError || isTracksError) return <>Error</>;
+  if (!tracks || tracks.length === 0) return <>0</>;
 
-  if (isError) return <>Error</>;
-
-  if (!playlists || playlists.length === 0) return <>0</>;
-
-  console.log(playlists);
+  console.log(tracks);
 
   return (
     <ul>
-      {playlists.map((playlist, idx) => (
-        <li key={idx}>{playlist.title}</li>
+      {tracks.map((track, idx) => (
+        <li key={idx}>{track.album_name}</li>
       ))}
     </ul>
   );

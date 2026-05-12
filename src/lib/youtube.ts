@@ -15,5 +15,5 @@ export const getVideo = async (q: string) => {
   const res = await fetch(`${BASE_URL}?${params.toString()}`);
   if (!res.ok) throw new Error(`Error Youtube ${res.status}`);
   const data = await res.json();
-  return data.items[0].id.videoId;
+  return data.items[0];
 };

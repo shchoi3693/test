@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
-import { Playlist_tracks, Playlist_track } from '@/types/playlist';
+import { PlaylistTrack } from '@/types/playlist';
 import { playlistService } from './playlistService';
 
 const supabase = createClient();
@@ -10,8 +10,8 @@ export const trackService = {
     newTrack,
   }: {
     userId: string;
-    newTrack: any;
-  }): Promise<Playlist_tracks> {
+    newTrack: Omit<PlaylistTrack, 'id' | 'user_id' | 'playlist_id' | 'added_at'>;
+  }): Promise<PlaylistTrack> {
     const { data: playlist, error: pError } = await supabase
       .from('playlists')
       .select('id')
@@ -33,11 +33,30 @@ export const trackService = {
 
     const { data, error } = await supabase
       .from('playlist_tracks')
-      .insert([{ ...newTrack, playlist_id: targetPlaylistId }])
+      .insert([{ ...newTrack, user_id: userId, playlist_id: targetPlaylistId }])
       .select('*, playlists(*)')
       .single();
     if (error) throw new Error(error.message);
 
-    return data as Playlist_tracks;
+    return data as PlaylistTrack;
+  },
+
+  async getTrackToPlaylist({
+    user_id,
+    playlist_id,
+  }: {
+    user_id: string;
+    playlist_id: string;
+  }): Promise<PlaylistTrack[]> {
+    const { data, error } = await supabase
+      .from('playlist_tracks')
+      .select('*, playlists!inner(user_id)')
+      .eq('playlist_id', playlist_id)
+      .eq('user_id', user_id)
+      .order('added_at', { ascending: true });
+
+    if (error) throw new Error(error.message);
+
+    return data as PlaylistTrack[];
   },
 };

@@ -2,33 +2,26 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { Auth } from '@supabase/auth-ui-react';
-import { useEffect, useState } from 'react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
-  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    const checkUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(event => {
+      if (event === 'SIGNED_IN') {
+        router.refresh();
         router.push('/');
       }
-      setIsLoaded(true);
-    };
-    checkUser();
+    });
+
+    return () => subscription.unsubscribe();
   }, [supabase, router]);
-
-  if (!isLoaded) return null;
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/login';
-  };
 
   return (
     <div>

@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { playlistService } from '@/services/playlistService';
 
-export const usePlaylists = (userId: string | null) => {
+export const usePlaylist = (userId: string | null) => {
   return useQuery({
-    queryKey: ['playlists', userId],
+    queryKey: ['playlist', userId],
     queryFn: () => playlistService.getPlaylist(userId!),
     enabled: !!userId,
   });
