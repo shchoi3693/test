@@ -1,6 +1,5 @@
 import { trackService } from '@/services/trackService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getVideo } from '@/lib/youtube';
 import { Itunes } from '@/types/itunes';
 
 export const usePlaylistTrack = ({
@@ -23,8 +22,13 @@ export const useAddTrack = () => {
 
   return useMutation({
     mutationFn: async ({ userId, track }: { userId: string; track: Itunes }) => {
-      //const ytbData = await getVideo(`${track.trackName} ${track.artistName} official`);
-      const ytbData = { id: { videoId: 'test2' } };
+      const searchQuery = `${track.trackName} ${track.artistName} official`;
+      const ytbRes = await fetch(`/api/youtube?q=${encodeURIComponent(searchQuery)}`);
+      if (!ytbRes.ok) throw new Error('ytbApi error');
+      const ytbData = await ytbRes.json();
+      //const ytbId = ytbData.id?.videoId;
+      const ytbId = 'test22';
+
       return trackService.addTrackToPlaylist({
         userId,
         newTrack: {
@@ -32,9 +36,15 @@ export const useAddTrack = () => {
           artist_name: track.artistName,
           title: track.trackName,
           image_url: track.artworkUrl100,
-          youtube_video_id: ytbData.id.videoId,
+          youtube_video_id: ytbId,
         },
       });
+    },
+
+    onError: (error: any) => {
+      if (error.code === '23505') {
+        console.log('id unique toast');
+      }
     },
 
     onSuccess: data => {

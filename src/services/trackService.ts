@@ -36,7 +36,7 @@ export const trackService = {
       .insert([{ ...newTrack, user_id: userId, playlist_id: targetPlaylistId }])
       .select('*, playlists(*)')
       .single();
-    if (error) throw new Error(error.message);
+    if (error) throw error;
 
     return data as PlaylistTrack;
   },
@@ -55,7 +55,7 @@ export const trackService = {
       .eq('user_id', user_id)
       .order('added_at', { ascending: true });
 
-    if (error) throw new Error(error.message);
+    if (error) throw error;
 
     return data as PlaylistTrack[];
   },

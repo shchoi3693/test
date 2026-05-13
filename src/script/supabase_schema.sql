@@ -17,9 +17,6 @@ CREATE TABLE IF NOT EXISTS playlist_tracks (
   added_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 
-ALTER TABLE playlist_tracks DROP CONSTRAINT IF EXISTS playlist_tracks_youtube_video_id_key;
-
 ALTER TABLE playlist_tracks 
 ADD CONSTRAINT unique_playlist_track UNIQUE (playlist_id, youtube_video_id);
 

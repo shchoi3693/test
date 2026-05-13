@@ -1,17 +1,28 @@
 import { NextResponse } from 'next/server';
 
+const BASE_URL = 'https://itunes.apple.com/search';
+
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const term = searchParams.get('term');
+  const term = new URL(request.url).searchParams.get('term');
 
   if (!term) {
     return NextResponse.json({ error: 'Term is required' }, { status: 400 });
   }
 
-  const response = await fetch(
-    `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=10`,
-  );
-  const data = await response.json();
+  try {
+    const params = new URLSearchParams({
+      term,
+      entity: 'song',
+      limit: '10',
+    });
+    const res = await fetch(`${BASE_URL}?${params}`, { next: { revalidate: 3600 } });
+    if (!res.ok) {
+      return NextResponse.json({ error: 'iTunes API error' }, { status: res.status });
+    }
 
-  return NextResponse.json(data);
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }

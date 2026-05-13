@@ -12,7 +12,7 @@ export default function TanstackProvider({ children }: { children: ReactNode }) 
           queries: {
             staleTime: 1000 * 60 * 5,
             gcTime: 1000 * 60 * 30,
-            refetchOnWindowFocus: false, // 윈도우 포커스 시 자동 갱신 끔
+            refetchOnWindowFocus: false, // 윈도우 포커스 시 자동 갱신
             retry: 1,
           },
         },

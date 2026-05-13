@@ -1,13 +1,12 @@
-import React from 'react';
-import Search from '@/components/Search';
-import PlaylistList from '@/components/PlaylistList';
+import Search from '@/components/search/Search';
 import VinylRecord from '@/components/VinylRecord';
+import AlbumCoverList from '@/components/AlbumCoverList';
 
 export default function Playlist() {
   return (
     <div>
-      <Search />
-      <PlaylistList />
+      {/* <Search /> */}
+      {/* <AlbumCoverList /> */}
       <VinylRecord />
     </div>
   );
