@@ -38,7 +38,7 @@ export default function Search() {
   if (isAddTrackPending) return <>pending</>;
 
   return (
-    <div className="fixed w-50 right-0 p-2">
+    <div className="fixed w-50 right-0 p-2 z-100">
       <SearchInput value={query} onChange={e => setQuery(e.target.value)} onReset={handlerReset} />
       <SearchResult
         query={query}

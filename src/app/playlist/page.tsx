@@ -1,13 +1,13 @@
 import Search from '@/components/search/Search';
-import VinylRecord from '@/components/VinylRecord';
+import Turntable from '@/components/turntable/Turntable';
 import AlbumCoverList from '@/components/AlbumCoverList';
 
 export default function Playlist() {
   return (
     <div>
-      {/* <Search /> */}
-      {/* <AlbumCoverList /> */}
-      <VinylRecord />
+      <Search />
+      <AlbumCoverList />
+      {/* <Turntable /> */}
     </div>
   );
 }
